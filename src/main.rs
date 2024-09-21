@@ -1,4 +1,5 @@
-use iced::widget::{button, column, text, Column};
+use iced::widget::{button, column, container, text};
+use iced::{Alignment, Element, Length};
 
 #[derive(Default)]
 struct Counter {
@@ -12,20 +13,24 @@ pub enum Message {
 }
 
 impl Counter {
-    pub fn view(&self) -> Column<Message> {
-        // We use a column: a simple vertical layout
-        column![
-            // The increment button. We tell it to produce an
-            // `Increment` message when pressed
+    pub fn view(&self) -> Element<Message> {
+        // カウンターとボタンを垂直に配置し、中央揃えにします
+        let content = column![
             button("+").on_press(Message::Increment),
-
-            // We show the value of the counter here
             text(self.value).size(50),
-
-            // The decrement button. We tell it to produce a
-            // `Decrement` message when pressed
             button("-").on_press(Message::Decrement),
         ]
+        .spacing(20)
+        .align_x(Alignment::Center);
+
+        // コンテナでラップし、画面の中央に配置します
+        container(content)
+            .padding(10)
+            .width(Length::Fill)
+            .height(Length::Fill)
+            .align_x(Alignment::Center)
+            .align_y(Alignment::Center)
+            .into()
     }
 
     pub fn update(&mut self, message: Message) {
