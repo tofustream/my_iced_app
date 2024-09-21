@@ -10,20 +10,23 @@ struct Counter {
 pub enum Message {
     Increment,
     Decrement,
+    Reset, // リセット用のメッセージを追加
 }
 
 impl Counter {
     pub fn view(&self) -> Element<Message> {
-        // カウンターとボタンを垂直に配置し、中央揃えにします
+        // 新しい説明テキストを含むカウンターとボタンを垂直に配置
         let content = column![
+            text("This is a simple counter:").size(30), // 説明用のテキストを追加
             button("+").on_press(Message::Increment),
             text(self.value).size(50),
             button("-").on_press(Message::Decrement),
+            button("Reset").on_press(Message::Reset), // リセットボタンを追加
         ]
         .spacing(20)
         .align_x(Alignment::Center);
 
-        // コンテナでラップし、画面の中央に配置します
+        // コンテナでラップし、画面の中央に配置
         container(content)
             .padding(10)
             .width(Length::Fill)
@@ -40,6 +43,9 @@ impl Counter {
             }
             Message::Decrement => {
                 self.value -= 1;
+            }
+            Message::Reset => {
+                self.value = 0; // リセットボタンでカウンターをゼロにする
             }
         }
     }
